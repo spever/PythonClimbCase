@@ -29,39 +29,52 @@ class BDTB:
                 print u"连接百度贴吧失败,错误原因:", e.reason
                 return None
 
+    # 获取帖子标题
     def getTitle(self):
         pageResponse = self.getPageResponse(1)
-        pattern = re.compile('h3 class="core_title_txt pull-left text-overflow.*?>(.*?)</',re.S)
-        result = re.search(pattern,pageResponse)
-        if  result:
+        pattern = re.compile('h3 class="core_title_txt pull-left text-overflow.*?>(.*?)</', re.S)
+        result = re.search(pattern, pageResponse)
+        if result:
             print result.group(1)
 
             return result.group(1).strip()
         else:
             return None
 
+    # 获取该帖子一共多少页
     def getPageNum(self):
         pageResponse = self.getPageResponse(1)
-        pattern = re.compile('<li class="l_reply_num.*?</span>.*?<span.*?>(.*?)</span>',re.S)
-        result= re.search(pattern,pageResponse)
+        pattern = re.compile('<li class="l_reply_num.*?</span>.*?<span.*?>(.*?)</span>', re.S)
+        result = re.search(pattern, pageResponse)
         if result:
             print result.group(1)
             return result.group(1).strip()
         else:
             return None
 
+    # 获取该帖子总共回复数量
     def getReplyNumSm(self):
         pageResponse = self.getPageResponse(1)
-        pattern = re.compile('<li class="l_reply_num.*?<span.*?>(.*?)</span>',re.S)
-        result= re.search(pattern,pageResponse)
+        pattern = re.compile('<li class="l_reply_num.*?<span.*?>(.*?)</span>', re.S)
+        result = re.search(pattern, pageResponse)
         if result:
             print result.group(1)
             return result.group(1).strip()
         else:
             return None
+
+    # 提取正文内容
+    def getContent(self, page):
+        pageContent = self.getPageResponse(page)
+        pattern = re.compile('<div id="post_content_.*? class="d_post_content j_d_post_content.*?>(.*?)</div>', re.S)
+        result = re.findall(pattern, pageContent)
+        for item in result:
+            print  item
+
 
 baseUrl = 'http://tieba.baidu.com/p/3138733512'
 bdtb = BDTB(baseUrl, 1)
 bdtb.getTitle()
 bdtb.getPageNum()
 bdtb.getReplyNumSm()
+bdtb.getContent(1)
